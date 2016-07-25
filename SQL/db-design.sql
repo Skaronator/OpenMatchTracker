@@ -1,135 +1,202 @@
-CREATE TABLE `omt_matches` (
-	`mid` INT NOT NULL,
-	`date` DATETIME NOT NULL,
-	`duration` TIME NOT NULL,
-	`mapid` INT NOT NULL,
-	`hid` INT NOT NULL,
-	`team_won` tinyint NOT NULL,
-	`tickrate` tinyint NOT NULL,
-	PRIMARY KEY (`mid`)
-);
-
-CREATE TABLE `omt_maps` (
-	`mapid` INT NOT NULL,
-	`name` varchar(20) NOT NULL UNIQUE,
-	`logo` varchar(30) NOT NULL,
-	PRIMARY KEY (`mapid`)
-);
-
-CREATE TABLE `omt_players` (
-	`pid` INT NOT NULL,
-	`name` varchar(128) NOT NULL,
-	`steamid` INT NOT NULL UNIQUE,
-	`role` INT,
-	`staticname` tinyint NOT NULL DEFAULT '0',
-	PRIMARY KEY (`pid`)
-);
-
-CREATE TABLE `omt_match_player` (
-	`tpid` INT NOT NULL,
-	`pid` INT NOT NULL DEFAULT '0',
-	`mid` INT NOT NULL,
-	`first_side` tinyint NOT NULL,
-	`adr_rating` DECIMAL(5,2) NOT NULL,
-	`hltv_rating` DECIMAL(4,3) NOT NULL,
-	`rws_rating` DECIMAL(4,2) NOT NULL,
-	`kill_count` tinyint NOT NULL,
-	`assist_count` tinyint NOT NULL,
-	`death_count` tinyint NOT NULL,
-	`trade_kill_count` tinyint NOT NULL,
-	`trade_death_count` tinyint NOT NULL,
-	`hs_count` tinyint NOT NULL,
-	`tk_count` tinyint NOT NULL,
-	`round_count` tinyint NOT NULL,
-	`bomb_planted` tinyint NOT NULL,
-	`bomb_defused` tinyint NOT NULL,
-	`flashbang_count` tinyint,
-	`smoke_count` tinyint,
-	`he_count` tinyint,
-	`molotov_count` tinyint,
-	`decoy_count` tinyint,
-	`incendiary_count` tinyint,
-	`1k_count` tinyint,
-	`2k_count` tinyint,
-	`3k_count` tinyint,
-	`4k_count` tinyint,
-	`5k_count` tinyint,
-	`1v1_won` tinyint,
-	`1v1_loss` tinyint,
-	`1v2_won` tinyint,
-	`1v2_loss` tinyint,
-	`1v3_won` tinyint,
-	`1v3_loss` tinyint,
-	`1v4_won` tinyint,
-	`1v4_loss` tinyint,
-	`1v5_won` tinyint,
-	`1v5_loss` tinyint,
-	PRIMARY KEY (`tpid`)
-);
-
-CREATE TABLE `omt_weapons` (
-	`wid` tinyint NOT NULL,
-	`name` varchar(30) NOT NULL UNIQUE,
-	PRIMARY KEY (`wid`)
-);
 
 CREATE TABLE `omt_host` (
-	`hid` INT NOT NULL,
-	`name` varchar(20) NOT NULL UNIQUE,
-	`logo` varchar(30) NOT NULL,
-	PRIMARY KEY (`hid`)
-);
+  `hid` int(11) NOT NULL,
+  `name` varchar(20) COLLATE latin1_german1_ci NOT NULL,
+  `img` varchar(64) COLLATE latin1_german1_ci DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-CREATE TABLE `omt_side` (
-	`sid` tinyint NOT NULL,
-	`shortname` varchar(5) NOT NULL UNIQUE,
-	`name` varchar(20) NOT NULL UNIQUE,
-	PRIMARY KEY (`sid`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `omt_weaponsstats` (
-	`statsid` INT NOT NULL,
-	`pid` INT NOT NULL,
-	`mid` INT NOT NULL,
-	`wid` INT NOT NULL,
-	`kills` INT NOT NULL,
-	PRIMARY KEY (`statsid`)
-);
+CREATE TABLE `omt_maps` (
+  `mapid` int(11) NOT NULL,
+  `name` varchar(20) COLLATE latin1_german1_ci NOT NULL,
+  `img` varchar(64) COLLATE latin1_german1_ci DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
+
+CREATE TABLE `omt_matches` (
+  `mid` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `duration` time NOT NULL,
+  `mapid` int(11) NOT NULL,
+  `hid` int(11) NOT NULL,
+  `team_won` tinyint(4) NOT NULL,
+  `tickrate` tinyint(3) UNSIGNED NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
+
+CREATE TABLE `omt_match_player` (
+  `tpid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
+  `first_side` tinyint(4) NOT NULL,
+  `adr_rating` decimal(5,2) NOT NULL,
+  `hltv_rating` decimal(4,3) NOT NULL,
+  `rws_rating` decimal(4,2) NOT NULL,
+  `kill_count` tinyint(4) NOT NULL,
+  `assist_count` tinyint(4) NOT NULL,
+  `death_count` tinyint(4) NOT NULL,
+  `trade_kill_count` tinyint(4) NOT NULL,
+  `trade_death_count` tinyint(4) NOT NULL,
+  `hs_count` tinyint(4) NOT NULL,
+  `tk_count` tinyint(4) NOT NULL,
+  `round_count` tinyint(4) NOT NULL,
+  `bomb_planted` tinyint(4) NOT NULL,
+  `bomb_defused` tinyint(4) NOT NULL,
+  `flashbang_count` tinyint(4) DEFAULT NULL,
+  `smoke_count` tinyint(4) DEFAULT NULL,
+  `he_count` tinyint(4) DEFAULT NULL,
+  `molotov_count` tinyint(4) DEFAULT NULL,
+  `decoy_count` tinyint(4) DEFAULT NULL,
+  `incendiary_count` tinyint(4) DEFAULT NULL,
+  `1k_count` tinyint(4) DEFAULT NULL,
+  `2k_count` tinyint(4) DEFAULT NULL,
+  `3k_count` tinyint(4) DEFAULT NULL,
+  `4k_count` tinyint(4) DEFAULT NULL,
+  `5k_count` tinyint(4) DEFAULT NULL,
+  `1v1_won` tinyint(4) DEFAULT NULL,
+  `1v1_loss` tinyint(4) DEFAULT NULL,
+  `1v2_won` tinyint(4) DEFAULT NULL,
+  `1v2_loss` tinyint(4) DEFAULT NULL,
+  `1v3_won` tinyint(4) DEFAULT NULL,
+  `1v3_loss` tinyint(4) DEFAULT NULL,
+  `1v4_won` tinyint(4) DEFAULT NULL,
+  `1v4_loss` tinyint(4) DEFAULT NULL,
+  `1v5_won` tinyint(4) DEFAULT NULL,
+  `1v5_loss` tinyint(4) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
+
+CREATE TABLE `omt_players` (
+  `pid` int(11) NOT NULL,
+  `name` varchar(128) COLLATE latin1_german1_ci NOT NULL,
+  `steamid` int(11) NOT NULL,
+  `role` int(11) DEFAULT NULL,
+  `staticname` bit(1) NOT NULL DEFAULT b'0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
 
 CREATE TABLE `omt_role` (
-	`rid` INT NOT NULL,
-	`name` varchar(30) NOT NULL UNIQUE,
-	PRIMARY KEY (`rid`)
-);
+  `rid` int(11) NOT NULL,
+  `name` varchar(30) COLLATE latin1_german1_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
+
+-- --------------------------------------------------------
 
 CREATE TABLE `omt_rounds` (
-	`mrid` INT NOT NULL,
-	`mid` INT NOT NULL,
-	`round` tinyint NOT NULL,
-	`won` tinyint NOT NULL,
-	PRIMARY KEY (`mrid`)
-);
+  `mrid` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
+  `round` tinyint(4) NOT NULL,
+  `won` tinyint(4) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-ALTER TABLE `omt_matches` ADD CONSTRAINT `omt_matches_fk0` FOREIGN KEY (`mapid`) REFERENCES `omt_maps`(`mapid`);
+-- --------------------------------------------------------
 
-ALTER TABLE `omt_matches` ADD CONSTRAINT `omt_matches_fk1` FOREIGN KEY (`hid`) REFERENCES `omt_host`(`hid`);
+CREATE TABLE `omt_side` (
+  `sid` tinyint(4) NOT NULL,
+  `shortname` varchar(5) COLLATE latin1_german1_ci NOT NULL,
+  `name` varchar(20) COLLATE latin1_german1_ci NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-ALTER TABLE `omt_matches` ADD CONSTRAINT `omt_matches_fk2` FOREIGN KEY (`team_won`) REFERENCES `omt_side`(`sid`);
+-- --------------------------------------------------------
 
-ALTER TABLE `omt_players` ADD CONSTRAINT `omt_players_fk0` FOREIGN KEY (`role`) REFERENCES `omt_role`(`rid`);
+CREATE TABLE `omt_weapons` (
+  `wid` tinyint(4) NOT NULL,
+  `name` varchar(30) COLLATE latin1_german1_ci NOT NULL,
+  `img` varchar(64) COLLATE latin1_german1_ci DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-ALTER TABLE `omt_match_player` ADD CONSTRAINT `omt_match_player_fk0` FOREIGN KEY (`pid`) REFERENCES `omt_players`(`pid`);
+-- --------------------------------------------------------
 
-ALTER TABLE `omt_match_player` ADD CONSTRAINT `omt_match_player_fk1` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`);
+CREATE TABLE `omt_weaponsstats` (
+  `statsid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `mid` int(11) NOT NULL,
+  `wid` int(11) NOT NULL,
+  `kills` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
-ALTER TABLE `omt_match_player` ADD CONSTRAINT `omt_match_player_fk2` FOREIGN KEY (`first_side`) REFERENCES `omt_side`(`sid`);
 
-ALTER TABLE `omt_weaponsstats` ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`pid`) REFERENCES `omt_players`(`pid`);
+ALTER TABLE `omt_host`
+  ADD PRIMARY KEY (`hid`),
+  ADD UNIQUE KEY `name` (`name`);
 
-ALTER TABLE `omt_weaponsstats` ADD CONSTRAINT `omt_weaponsstats_fk1` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`);
+ALTER TABLE `omt_maps`
+  ADD PRIMARY KEY (`mapid`),
+  ADD UNIQUE KEY `name` (`name`);
 
-ALTER TABLE `omt_weaponsstats` ADD CONSTRAINT `omt_weaponsstats_fk2` FOREIGN KEY (`wid`) REFERENCES `omt_weapons`(`wid`);
+ALTER TABLE `omt_matches`
+  ADD PRIMARY KEY (`mid`),
+  ADD KEY `omt_matches_fk0` (`mapid`),
+  ADD KEY `omt_matches_fk1` (`hid`),
+  ADD KEY `omt_matches_fk2` (`team_won`);
 
-ALTER TABLE `omt_rounds` ADD CONSTRAINT `omt_rounds_fk0` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`);
+ALTER TABLE `omt_match_player`
+  ADD PRIMARY KEY (`tpid`),
+  ADD KEY `omt_match_player_fk0` (`pid`),
+  ADD KEY `omt_match_player_fk1` (`mid`),
+  ADD KEY `omt_match_player_fk2` (`first_side`);
 
-ALTER TABLE `omt_rounds` ADD CONSTRAINT `omt_rounds_fk1` FOREIGN KEY (`won`) REFERENCES `omt_side`(`sid`);
+ALTER TABLE `omt_players`
+  ADD PRIMARY KEY (`pid`),
+  ADD UNIQUE KEY `steamid` (`steamid`),
+  ADD KEY `omt_players_fk0` (`role`);
+
+ALTER TABLE `omt_role`
+  ADD PRIMARY KEY (`rid`),
+  ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `omt_rounds`
+  ADD PRIMARY KEY (`mrid`),
+  ADD KEY `omt_rounds_fk0` (`mid`),
+  ADD KEY `omt_rounds_fk1` (`won`);
+
+ALTER TABLE `omt_side`
+  ADD PRIMARY KEY (`sid`),
+  ADD UNIQUE KEY `shortname` (`shortname`),
+  ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `omt_weapons`
+  ADD PRIMARY KEY (`wid`),
+  ADD UNIQUE KEY `name` (`name`);
+
+ALTER TABLE `omt_weaponsstats`
+  ADD PRIMARY KEY (`statsid`),
+  ADD KEY `omt_weaponsstats_fk0` (`pid`),
+  ADD KEY `omt_weaponsstats_fk1` (`mid`),
+  ADD KEY `omt_weaponsstats_fk2` (`wid`);
+
+
+ALTER TABLE `omt_host`
+  MODIFY `hid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_maps`
+  MODIFY `mapid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_matches`
+  MODIFY `mid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_match_player`
+  MODIFY `tpid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_players`
+  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_role`
+  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_rounds`
+  MODIFY `mrid` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_side`
+  MODIFY `sid` tinyint(4) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_weapons`
+  MODIFY `wid` tinyint(4) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `omt_weaponsstats`
+  MODIFY `statsid` int(11) NOT NULL AUTO_INCREMENT;
