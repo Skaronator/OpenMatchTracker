@@ -91,7 +91,8 @@ CREATE TABLE `omt_rounds` (
   `mrid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `round` tinyint(4) NOT NULL,
-  `won` tinyint(4) NOT NULL
+  `won` tinyint(4) NOT NULL,
+  `bombplant` varchar(1),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
