@@ -21,7 +21,7 @@ CREATE TABLE `omt_matches` (
   `duration` time NOT NULL,
   `mapid` int(11) NOT NULL,
   `hid` int(11) NOT NULL,
-  `team_won` tinyint(4) NOT NULL,
+  `team_won` tinyint(4) DEFAULT NULL,
   `tickrate` tinyint(3) UNSIGNED NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_german1_ci;
 
