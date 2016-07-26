@@ -118,7 +118,8 @@ CREATE TABLE `omt_weaponsstats` (
   `pid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `wid` smallint(6) NOT NULL,
-  `kills` int(11) NOT NULL
+  `kill_count` smallint(6) NOT NULL,
+  `assist_count` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
