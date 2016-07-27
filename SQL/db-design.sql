@@ -197,7 +197,7 @@ ALTER TABLE `omt_side`
   MODIFY `sid` tinyint(4) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_weapons`
-  MODIFY `wid` tinyint(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `wid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_weaponsstats`
   MODIFY `statsid` int(11) NOT NULL AUTO_INCREMENT;
