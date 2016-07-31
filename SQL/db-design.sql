@@ -22,7 +22,7 @@ CREATE TABLE `omt_matches` (
   `mapid` int(11) NOT NULL,
   `hid` int(11) NOT NULL,
   `team_won` tinyint(4) DEFAULT NULL,
-  `surrender` bit(1) NOT NULL DEFAULT b'0',
+  `surrender` tinyint(4) NOT NULL DEFAULT '0',
   `tickrate` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -78,7 +78,7 @@ CREATE TABLE `omt_players` (
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
   `steamid` bigint(20) NOT NULL,
   `role` int(11) DEFAULT NULL,
-  `staticname` bit(1) NOT NULL DEFAULT b'0'
+  `staticname` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
