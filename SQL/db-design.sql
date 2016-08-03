@@ -17,11 +17,12 @@ CREATE TABLE `omt_maps` (
 
 CREATE TABLE `omt_matches` (
   `mid` int(11) NOT NULL,
+  `demoid` VARCHAR(64) NOT NULL,
   `date` datetime NOT NULL,
   `duration` time NOT NULL,
   `mapid` int(11) NOT NULL,
   `hid` int(11) NOT NULL,
-  `team_won` tinyint(4) DEFAULT NULL,
+  `won_team` int(11) DEFAULT NULL,
   `surrender` tinyint(4) NOT NULL DEFAULT '0',
   `tickrate` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -32,7 +33,7 @@ CREATE TABLE `omt_match_player` (
   `tpid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
-  `first_side` tinyint(4) NOT NULL,
+  `tid` int(11) NOT NULL,
   `adr_rating` decimal(5,2) NOT NULL,
   `hltv_rating` decimal(4,3) NOT NULL,
   `rws_rating` decimal(4,2) NOT NULL,
@@ -84,26 +85,27 @@ CREATE TABLE `omt_players` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_role` (
-  `rid` int(11) NOT NULL,
-  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL
+  `roleid` int(11) NOT NULL,
+  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `sort_order` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_rounds` (
-  `mrid` int(11) NOT NULL,
+  `rid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
-  `round` tinyint(4) NOT NULL,
-  `won` tinyint(4) NOT NULL,
+  `round` tinyint(4) UNSIGNED NOT NULL,
+  `t_team` int(11) NOT NULL,
+  `ct_team` int(11) NOT NULL,
+  `won_team` int(11) NOT NULL,
   `bombplant` varchar(1)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
-CREATE TABLE `omt_side` (
-  `sid` tinyint(4) NOT NULL,
-  `shortname` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL
+CREATE TABLE `omt_team` (
+  `tid` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -136,15 +138,16 @@ ALTER TABLE `omt_maps`
 
 ALTER TABLE `omt_matches`
   ADD PRIMARY KEY (`mid`),
+  ADD UNIQUE KEY `demoid` (`demoid`),
   ADD KEY `omt_matches_fk0` (`mapid`),
   ADD KEY `omt_matches_fk1` (`hid`),
-  ADD KEY `omt_matches_fk2` (`team_won`);
+  ADD KEY `omt_matches_fk2` (`won_team`);
 
 ALTER TABLE `omt_match_player`
   ADD PRIMARY KEY (`tpid`),
   ADD KEY `omt_match_player_fk0` (`pid`),
   ADD KEY `omt_match_player_fk1` (`mid`),
-  ADD KEY `omt_match_player_fk2` (`first_side`);
+  ADD KEY `omt_match_player_fk2` (`tid`);
 
 ALTER TABLE `omt_players`
   ADD PRIMARY KEY (`pid`),
@@ -152,18 +155,18 @@ ALTER TABLE `omt_players`
   ADD KEY `omt_players_fk0` (`role`);
 
 ALTER TABLE `omt_role`
-  ADD PRIMARY KEY (`rid`),
+  ADD PRIMARY KEY (`roleid`),
   ADD UNIQUE KEY `name` (`name`);
 
 ALTER TABLE `omt_rounds`
-  ADD PRIMARY KEY (`mrid`),
+  ADD PRIMARY KEY (`rid`),
   ADD KEY `omt_rounds_fk0` (`mid`),
-  ADD KEY `omt_rounds_fk1` (`won`);
+  ADD KEY `omt_rounds_fk1` (`t_team`),
+  ADD KEY `omt_rounds_fk2` (`ct_team`),
+  ADD KEY `omt_rounds_fk3` (`won_team`);
 
-ALTER TABLE `omt_side`
-  ADD PRIMARY KEY (`sid`),
-  ADD UNIQUE KEY `shortname` (`shortname`),
-  ADD UNIQUE KEY `name` (`name`);
+ALTER TABLE `omt_team`
+  ADD PRIMARY KEY (`tid`);
 
 ALTER TABLE `omt_weapons`
   ADD PRIMARY KEY (`wid`),
@@ -191,13 +194,13 @@ ALTER TABLE `omt_players`
   MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_role`
-  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `roleid` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_rounds`
-  MODIFY `mrid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `omt_side`
-  MODIFY `sid` tinyint(4) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `omt_team`
+  MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_weapons`
   MODIFY `wid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
@@ -210,15 +213,15 @@ ALTER TABLE `omt_weaponsstats`
 ALTER TABLE `omt_matches`
   ADD CONSTRAINT `omt_matches_fk0` FOREIGN KEY (`mapid`) REFERENCES `omt_maps`(`mapid`),
   ADD CONSTRAINT `omt_matches_fk1` FOREIGN KEY (`hid`) REFERENCES `omt_host`(`hid`),
-  ADD CONSTRAINT `omt_matches_fk2` FOREIGN KEY (`team_won`) REFERENCES `omt_side`(`sid`);
+  ADD CONSTRAINT `omt_matches_fk2` FOREIGN KEY (`won_team`) REFERENCES `omt_team`(`tid`);
 
 ALTER TABLE `omt_players`
-  ADD CONSTRAINT `omt_players_fk0` FOREIGN KEY (`role`) REFERENCES `omt_role`(`rid`);
+  ADD CONSTRAINT `omt_players_fk0` FOREIGN KEY (`role`) REFERENCES `omt_role`(`roleid`);
 
 ALTER TABLE `omt_match_player`
   ADD CONSTRAINT `omt_match_player_fk0` FOREIGN KEY (`pid`) REFERENCES `omt_players`(`pid`),
   ADD CONSTRAINT `omt_match_player_fk1` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`),
-  ADD CONSTRAINT `omt_match_player_fk2` FOREIGN KEY (`first_side`) REFERENCES `omt_side`(`sid`);
+  ADD CONSTRAINT `omt_match_player_fk2` FOREIGN KEY (`tid`) REFERENCES `omt_team`(`tid`);
 
 ALTER TABLE `omt_weaponsstats`
   ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`tpid`) REFERENCES `omt_match_player`(`tpid`),
@@ -226,4 +229,6 @@ ALTER TABLE `omt_weaponsstats`
 
 ALTER TABLE `omt_rounds`
   ADD CONSTRAINT `omt_rounds_fk0` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`),
-  ADD CONSTRAINT `omt_rounds_fk1` FOREIGN KEY (`won`) REFERENCES `omt_side`(`sid`);
+  ADD CONSTRAINT `omt_rounds_fk1` FOREIGN KEY (`t_team`) REFERENCES `omt_team`(`tid`),
+  ADD CONSTRAINT `omt_rounds_fk2` FOREIGN KEY (`ct_team`) REFERENCES `omt_team`(`tid`),
+  ADD CONSTRAINT `omt_rounds_fk3` FOREIGN KEY (`won_team`) REFERENCES `omt_team`(`tid`);
