@@ -43,7 +43,7 @@ CREATE TABLE `omt_match_player` (
   `trade_kill_count` tinyint(4) UNSIGNED NOT NULL,
   `trade_death_count` tinyint(4) UNSIGNED NOT NULL,
   `entry_kill_won` tinyint(4) UNSIGNED NOT NULL,
-  `entry_kill_lose` tinyint(4) UNSIGNED NOT NULL,
+  `entry_kill_loss` tinyint(4) UNSIGNED NOT NULL,
   `hs_count` tinyint(4) UNSIGNED NOT NULL,
   `tk_count` tinyint(4) UNSIGNED NOT NULL,
   `round_count` tinyint(4) UNSIGNED NOT NULL,
