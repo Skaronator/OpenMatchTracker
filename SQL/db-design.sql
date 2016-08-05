@@ -30,7 +30,7 @@ CREATE TABLE `omt_matches` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_match_player` (
-  `tpid` int(11) NOT NULL,
+  `mpid` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `tid` int(11) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE `omt_weapons` (
 
 CREATE TABLE `omt_weaponsstats` (
   `wsid` int(11) NOT NULL,
-  `tpid` int(11) NOT NULL,
+  `mpid` int(11) NOT NULL,
   `wid` tinyint(4) UNSIGNED NOT NULL,
   `kills` tinyint(4) UNSIGNED NOT NULL,
   `hs_count` tinyint(4) UNSIGNED NOT NULL
@@ -144,7 +144,7 @@ ALTER TABLE `omt_matches`
   ADD KEY `omt_matches_fk2` (`won_team`);
 
 ALTER TABLE `omt_match_player`
-  ADD PRIMARY KEY (`tpid`),
+  ADD PRIMARY KEY (`mpid`),
   ADD KEY `omt_match_player_fk0` (`pid`),
   ADD KEY `omt_match_player_fk1` (`mid`),
   ADD KEY `omt_match_player_fk2` (`tid`);
@@ -174,7 +174,7 @@ ALTER TABLE `omt_weapons`
 
 ALTER TABLE `omt_weaponsstats`
   ADD PRIMARY KEY (`wsid`),
-  ADD KEY `omt_weaponsstats_fk0` (`tpid`),
+  ADD KEY `omt_weaponsstats_fk0` (`mpid`),
   ADD KEY `omt_weaponsstats_fk1` (`wid`);
 
 
@@ -188,7 +188,7 @@ ALTER TABLE `omt_matches`
   MODIFY `mid` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_match_player`
-  MODIFY `tpid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `mpid` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_players`
   MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT;
@@ -224,7 +224,7 @@ ALTER TABLE `omt_match_player`
   ADD CONSTRAINT `omt_match_player_fk2` FOREIGN KEY (`tid`) REFERENCES `omt_team`(`tid`);
 
 ALTER TABLE `omt_weaponsstats`
-  ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`tpid`) REFERENCES `omt_match_player`(`tpid`),
+  ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`mpid`) REFERENCES `omt_match_player`(`mpid`),
   ADD CONSTRAINT `omt_weaponsstats_fk1` FOREIGN KEY (`wid`) REFERENCES `omt_weapons`(`wid`);
 
 ALTER TABLE `omt_rounds`
