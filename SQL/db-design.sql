@@ -1,6 +1,6 @@
 
 CREATE TABLE `omt_host` (
-  `hid` int(11) NOT NULL,
+  `hid` tinyint(4) UNSIGNED NOT NULL,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `img` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -8,7 +8,7 @@ CREATE TABLE `omt_host` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_maps` (
-  `mapid` int(11) NOT NULL,
+  `mapid` tinyint(4) UNSIGNED NOT NULL,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `img` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -16,13 +16,13 @@ CREATE TABLE `omt_maps` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_matches` (
-  `mid` int(11) NOT NULL,
-  `demoid` VARCHAR(64) NOT NULL,
+  `mid` smallint(5) UNSIGNED NOT NULL,
+  `demoid` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
   `date` datetime NOT NULL,
   `duration` time NOT NULL,
-  `mapid` int(11) NOT NULL,
-  `hid` int(11) NOT NULL,
-  `won_team` int(11) DEFAULT NULL,
+  `mapid` tinyint(4) UNSIGNED NOT NULL,
+  `hid` tinyint(4) UNSIGNED NOT NULL,
+  `won_team` int(11) UNSIGNED DEFAULT NULL,
   `surrender` tinyint(4) NOT NULL DEFAULT '0',
   `tickrate` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -30,10 +30,10 @@ CREATE TABLE `omt_matches` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_match_player` (
-  `mpid` int(11) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
-  `tid` int(11) NOT NULL,
+  `mpid` int(11) UNSIGNED NOT NULL,
+  `pid` int(11) UNSIGNED NOT NULL,
+  `mid` smallint(5) UNSIGNED NOT NULL,
+  `tid` int(11) UNSIGNED NOT NULL,
   `adr_rating` decimal(5,2) NOT NULL,
   `hltv_rating` decimal(4,3) NOT NULL,
   `rws_rating` decimal(4,2) NOT NULL,
@@ -75,37 +75,38 @@ CREATE TABLE `omt_match_player` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_players` (
-  `pid` int(11) NOT NULL,
+  `pid` int(11) UNSIGNED NOT NULL,
   `name` varchar(128) COLLATE utf8_unicode_ci NOT NULL,
-  `steamid` bigint(20) NOT NULL,
-  `role` int(11) DEFAULT NULL,
+  `steamid` bigint(20) UNSIGNED NOT NULL,
+  `role` tinyint(4) UNSIGNED DEFAULT NULL,
   `staticname` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_role` (
-  `roleid` int(11) NOT NULL,
+  `roleid` tinyint(4) UNSIGNED NOT NULL,
   `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `sort_order` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_rounds` (
-  `rid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
+  `rid` int(11) UNSIGNED NOT NULL,
+  `mid` smallint(5) UNSIGNED NOT NULL,
   `round` tinyint(4) UNSIGNED NOT NULL,
-  `t_team` int(11) NOT NULL,
-  `ct_team` int(11) NOT NULL,
-  `won_team` int(11) NOT NULL,
-  `bombplant` varchar(1)
+  `t_team` int(11) UNSIGNED NOT NULL,
+  `ct_team` int(11) UNSIGNED NOT NULL,
+  `won_team` int(11) UNSIGNED NOT NULL,
+  `bombplant` varchar(1) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_team` (
-  `tid` int(11) NOT NULL
+  `tid` int(11) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -119,11 +120,13 @@ CREATE TABLE `omt_weapons` (
 -- --------------------------------------------------------
 
 CREATE TABLE `omt_weaponsstats` (
-  `wsid` int(11) NOT NULL,
-  `mpid` int(11) NOT NULL,
+  `wsid` int(11) UNSIGNED NOT NULL,
+  `mpid_killer` int(11) UNSIGNED NOT NULL,
+  `mpid_killed` int(11) UNSIGNED NOT NULL,
   `wid` tinyint(4) UNSIGNED NOT NULL,
-  `kills` tinyint(4) UNSIGNED NOT NULL,
-  `hs_count` tinyint(4) UNSIGNED NOT NULL
+  `round` int(11) UNSIGNED NOT NULL,
+  `is_hs` tinyint(4) UNSIGNED NOT NULL,
+  `kill_order` smallint(5) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -156,7 +159,8 @@ ALTER TABLE `omt_players`
 
 ALTER TABLE `omt_role`
   ADD PRIMARY KEY (`roleid`),
-  ADD UNIQUE KEY `name` (`name`);
+  ADD UNIQUE KEY `name` (`name`),
+  ADD UNIQUE KEY `sort_order` (`sort_order`);
 
 ALTER TABLE `omt_rounds`
   ADD PRIMARY KEY (`rid`),
@@ -174,39 +178,41 @@ ALTER TABLE `omt_weapons`
 
 ALTER TABLE `omt_weaponsstats`
   ADD PRIMARY KEY (`wsid`),
-  ADD KEY `omt_weaponsstats_fk0` (`mpid`),
-  ADD KEY `omt_weaponsstats_fk1` (`wid`);
+  ADD KEY `omt_weaponsstats_fk0` (`mpid_killer`),
+  ADD KEY `omt_weaponsstats_fk1` (`mpid_killed`),
+  ADD KEY `omt_weaponsstats_fk2` (`round`),
+  ADD KEY `omt_weaponsstats_fk3` (`wid`);
 
 
 ALTER TABLE `omt_host`
-  MODIFY `hid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `hid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_maps`
-  MODIFY `mapid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `mapid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_matches`
-  MODIFY `mid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `mid` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_match_player`
-  MODIFY `mpid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `mpid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_players`
-  MODIFY `pid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_role`
-  MODIFY `roleid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `roleid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_rounds`
-  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `rid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_team`
-  MODIFY `tid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `tid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_weapons`
   MODIFY `wid` tinyint(4) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `omt_weaponsstats`
-  MODIFY `wsid` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `wsid` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 
 
@@ -224,11 +230,16 @@ ALTER TABLE `omt_match_player`
   ADD CONSTRAINT `omt_match_player_fk2` FOREIGN KEY (`tid`) REFERENCES `omt_team`(`tid`);
 
 ALTER TABLE `omt_weaponsstats`
-  ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`mpid`) REFERENCES `omt_match_player`(`mpid`),
-  ADD CONSTRAINT `omt_weaponsstats_fk1` FOREIGN KEY (`wid`) REFERENCES `omt_weapons`(`wid`);
+  ADD CONSTRAINT `omt_weaponsstats_fk0` FOREIGN KEY (`mpid_killer`) REFERENCES `omt_match_player` (`mpid`),
+  ADD CONSTRAINT `omt_weaponsstats_fk1` FOREIGN KEY (`mpid_killed`) REFERENCES `omt_match_player` (`mpid`),
+  ADD CONSTRAINT `omt_weaponsstats_fk2` FOREIGN KEY (`round`) REFERENCES `omt_rounds` (`rid`),
+  ADD CONSTRAINT `omt_weaponsstats_fk3` FOREIGN KEY (`wid`) REFERENCES `omt_weapons` (`wid`);
 
 ALTER TABLE `omt_rounds`
-  ADD CONSTRAINT `omt_rounds_fk0` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`),
-  ADD CONSTRAINT `omt_rounds_fk1` FOREIGN KEY (`t_team`) REFERENCES `omt_team`(`tid`),
-  ADD CONSTRAINT `omt_rounds_fk2` FOREIGN KEY (`ct_team`) REFERENCES `omt_team`(`tid`),
+  ADD CONSTRAINT `omt_rounds_fk0` FOREIGN KEY (`mid`) REFERENCES `omt_matches`(`mid`);
+ALTER TABLE `omt_rounds`
+  ADD CONSTRAINT `omt_rounds_fk1` FOREIGN KEY (`t_team`) REFERENCES `omt_team`(`tid`);
+ALTER TABLE `omt_rounds`
+  ADD CONSTRAINT `omt_rounds_fk2` FOREIGN KEY (`ct_team`) REFERENCES `omt_team`(`tid`);
+ALTER TABLE `omt_rounds`
   ADD CONSTRAINT `omt_rounds_fk3` FOREIGN KEY (`won_team`) REFERENCES `omt_team`(`tid`);
